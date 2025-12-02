@@ -1,7 +1,13 @@
 import pytest
-from triangulator import api
 
-def test_pointsetmanager_mock_404(client=None):
-    """Simule une réponse 404 du PointSetManager."""
-    # Placeholder : on ne fait que lever une erreur simulée
-    raise NotImplementedError("Mock de PointSetManager à implémenter")
+def test_pointsetmanager_404_simulation(monkeypatch):
+    """Simule un mock du PointSetManager renvoyant 404."""
+    from triangulator import api
+
+    def fake_get_pointset(point_set_id):
+        raise FileNotFoundError("PointSet non trouvé")
+
+    monkeypatch.setattr("triangulator.core.triangulate", fake_get_pointset)
+    client = api.app.test_client()
+    response = client.get("/triangulate/unknown")
+    assert response.status_code in (404, 500)
