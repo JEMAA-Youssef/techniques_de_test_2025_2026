@@ -1,4 +1,5 @@
-[tool.ruff.lint]
+[tool.ruff]
+exclude = ["tests"]
 select = [
     "D",
     "E",
